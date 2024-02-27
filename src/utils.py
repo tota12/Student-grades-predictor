@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 import pandas as pd
-import dill
+import pickle
 
 
 def save_obj(obj, file_path):
@@ -18,10 +18,22 @@ def save_obj(obj, file_path):
         os.makedirs(dir_path, exist_ok=True)
 
         with open(file_path, 'wb') as file_obj:
-            dill.dump(obj, file_obj)
+            pickle.dump(obj, file_obj)
 
     except Exception as e:
-        raise CustomException(f'Error in saving object to file: {e}')
+        raise CustomException(e, sys)
+
+
+def load_obj(file_path):
+    '''
+    This method is responsible for loading the object from the file
+    '''
+    try:
+        with open(file_path, 'rb') as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
 
 
 def evaluate_models(x_train, y_train, x_test, y_test, models, params):
